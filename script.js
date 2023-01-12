@@ -1,3 +1,5 @@
+//API VARIABLES
+
 const API_URL =
   "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=fdf443b529cfb021a28eebf7c0713e93&page=1";
 
@@ -6,15 +8,36 @@ const IMG_PATH = "https://image.tmdb.org/t/p/w500/";
 const SEARCH_API =
   "https://api.themoviedb.org/3/search/movie?api_key=fdf443b529cfb021a28eebf7c0713e93&query='";
 
+//GENERAL VARIABLES
+
 const form = document.getElementById("form");
 const search = document.getElementById("search");
 const main = document.getElementById("main");
 
-// const getClassByRate = (vote) => {
-//   if (vote >= 8) return "green";
-//   if (vote >= 5) return "orange";
-//   if (vote < 5) return "red";
-// };
+// Get Inicial Movies
+
+const getMovies = async (url) => {
+  const res = await fetch(url);
+  const data = await res.json();
+
+  showMovies(data.results);
+};
+
+// getMovies(API_URL);
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  const searchTerm = search.value;
+
+  if (search && searchTerm !== "") {
+    getMovies(SEARCH_API + searchTerm);
+
+    search.value = "";
+  } else {
+    window.location.reload();
+  }
+});
 
 const getClassByRate = (vote) =>
   vote >= 7 ? "green" : vote >= 5 ? "orange " : "red";
@@ -46,29 +69,3 @@ const showMovies = (movies) => {
     main.appendChild(movieEl);
   });
 };
-
-//   Get Inicial Movies
-
-const getMovies = async (url) => {
-  const res = await fetch(url);
-  const data = await res.json();
-
-  showMovies(data.results);
-  console.log(data.results);
-};
-
-// getMovies(API_URL);
-
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const searchTerm = search.value;
-
-  if (search && searchTerm !== "") {
-    getMovies(SEARCH_API + searchTerm);
-
-    search.value = "";
-  } else {
-    window.location.reload();
-  }
-});
